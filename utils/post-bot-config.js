@@ -6,12 +6,14 @@ var options = {
     uri : 'https://api.kik.com/v1/config',
     method : 'POST',
     auth: {
-        'user': 'hello.bot',
-        'pass': '1300e324-fc0f-433d-9767-15ff59a801d5',
+        // my bot name here
+        'user': 'example.bot',
+        'pass': '8a11119c-dd54-4241-b2ce-81869881f42e',
         'sendImmediately': false
     },
     json: {
-        'webhook': 'https://example.com/incoming',
+        // AWS url here
+        'webhook': 'http://kikbotexperiments.tpeamtxtui.us-west-2.elasticbeanstalk.com/incoming',
         'features': {
             'manuallySendReadReceipts': false,
             'receiveReadReceipts': false,
