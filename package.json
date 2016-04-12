@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anthkim/kik-bot-experiments.git"
+    "url": "git+https://github.com/amitkumar/kik-bot-experiments.git"
   },
-  "author": "AK",
+  "author": "Amit Kumar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/anthkim/kik-bot-experiments/issues"
+    "url": "https://github.com/amitkumar/kik-bot-experiments/issues"
   },
-  "homepage": "https://github.com/anthkim/kik-bot-experiments#readme",
+  "homepage": "https://github.com/amitkumar/kik-bot-experiments#readme",
   "dependencies": {
     "@kikinteractive/kik": "^2.0.0",
     "express": "^4.13.4",
