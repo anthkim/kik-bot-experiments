@@ -24,8 +24,8 @@ let bot = new Bot({
 bot.onTextMessage((message) => {
     console.log('hello got a message', message);
     bot.getUserProfile(message.from)
-    	.then( (user) => {
-    		message.reply('Hi, ${user.FirstName}! You sent me the message: "' + message.body + '"');
+    	.then((user) => {
+    		message.reply('Hi, ${user.firstName}! You sent me the message: "' + message.body + '"');
     	});
 });
 
