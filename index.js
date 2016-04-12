@@ -26,7 +26,7 @@ function processMessage(message, callback){
 		callback(null, 'You are you');
 	}
 	else {
-		callback(null, 'Hello! You sent me the message: "' + message.body + '"');
+		callback(null, 'Hello! You sent me the message: "' + message + '"');
 	}
 }
 
