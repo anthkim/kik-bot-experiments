@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/anthkim/kik-bot-experiments.git"
   },
-  "author": "Amit Kumar",
+  "author": "AK",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/anthkim/kik-bot-experiments/issues"
@@ -20,6 +20,7 @@
   "dependencies": {
     "@kikinteractive/kik": "^2.0.0",
     "express": "^4.13.4",
+    "getenv": "^0.6.0",
     "request": "^2.70.0"
   }
 }
