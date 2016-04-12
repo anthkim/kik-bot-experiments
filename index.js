@@ -21,12 +21,19 @@ let bot = new Bot({
 // 	baseUrl: 'kik-echobot.ngrok.io'
 // });
 
+function getUserInfo(message, callback) {
+	callback("You are you");
+}
+
 bot.onTextMessage((message) => {
     console.log('hello got a message', message);
-    bot.getUserProfile(message.from)
-    	.then((user) => {
-    		message.reply('Hi, ${user.firstName}! You sent me the message: "' + message.body + '"');
+    // message.reply('Hello! You sent me the message: "' + message.body + '"');
+    if (message.toLowerCase() === "who am i") { 
+    	getUserInfo(message.body, function(err, resposne) {
+    		message.reply(response);
     	});
+    };
+
 });
 
 app.get('/', function(req, res){
