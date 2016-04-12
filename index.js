@@ -23,7 +23,10 @@ let bot = new Bot({
 
 bot.onTextMessage((message) => {
     console.log('hello got a message', message);
-    message.reply('Hello! You sent me the message: "' + message.body + '"');
+    bot.getUserProfile(message.from)
+    	.then( (user) => {
+    		message.reply('Hi, ${user.FirstName}! You sent me the message: "' + message.body + '"');
+    	});
 });
 
 app.get('/', function(req, res){
