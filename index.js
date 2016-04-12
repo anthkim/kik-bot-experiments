@@ -16,7 +16,7 @@ let bot = new Bot({
 
 bot.onTextMessage((message) => {
     console.log('hello got a message', message);
-    message.reply('hello! You sent me the message: "' + message.body + '"');
+    message.reply('Hello! You sent me the message: "' + message.body + '"');
 });
 
 app.get('/', function(req, res){
