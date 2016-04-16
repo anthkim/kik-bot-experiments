@@ -33,7 +33,7 @@ function processMessage(message, callback){
 
 		request(url, function(error, response, body){
 			var info = JSON.parse(body);
-			callback(null, info);
+			callback(null, body);
 		});
 	}
 }
