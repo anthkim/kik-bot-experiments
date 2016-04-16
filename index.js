@@ -16,10 +16,6 @@ let bot = new Bot({
     baseUrl: 'kik-echobot.ngrok.io'
 });
 
-
-
-
-
 function getCompany(message, callback){
 	var company = message.slice('search '.length);
 	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + company;
@@ -52,23 +48,34 @@ function promptMe(message, callback){
 	callback(null, 'Hi! You can type \'quote [TICKER]\' and I can get  you the latest price on the stock. Or you can type \'search [COMPANY]\' and I\'ll find the ticker for you! Later I will be smarter.');
 }
 
-bot.onTextMessage((message) => {
+function processMessage(message, callback) {
+	console.log('processMessage ' + message);
 	if(message.toLowerCase().indexOf('quote') === 0) {
 		getQuote(message.body, function(err, response){
 			console.log(response);
-			message.reply(response);
+			// message.reply(response);
+			callback(null, response);
 		});
 	} else if(message.toLowerCase().indexOf('search') === 0) {
 		getCompany(message.body, function(err, response){
 			console.log(response);
-			message.reply(response);
+			// message.reply(response
+			callback(null, response);
 		});
 	} else {
 		promptMe(message.body, function(err, response){
 			console.log(response);
-			message.reply(response);
+			// message.reply(response);
+			callback(null, response);
 		});
 	}
+}
+
+
+bot.onTextMessage((message) => {
+	processMessage(message.body, function(error, response){
+		message.reply(response);
+	});
 });
 
 
@@ -87,6 +94,9 @@ app.get('/', function(req, res){
 	} else{
 		res.send('cannot help');
 	}
+	// processMessage(req.query.message, function(error, response){
+	// 	res.send(response);
+	// })
 
 });
 
