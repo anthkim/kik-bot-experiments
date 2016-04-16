@@ -61,7 +61,7 @@ bot.onTextMessage((message) => {
 	else{
 		getCompany(message, function(err, response){
 			console.log(response);
-			message.addResponseKeyboard(response);
+			message.reply.addResponseKeyboard(response);
 		});
 	}
 })
