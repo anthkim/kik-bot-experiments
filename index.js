@@ -48,21 +48,26 @@ function getQuote(message, callback){
 	});
 }
 
+function promptMe(message, callback){
+	callback(null, 'Hi! You can type \'quote [TICKER]\' and I can get  you the latest price on the stock. Or you can type \'search [COMPANY]\' and I\'ll find the ticker for you! Later I will be smarter.');
+}
+
 bot.onTextMessage((message) => {
-	if(message.toLowerCase().indexOf('quote') === 0){
+	if(message.toLowerCase().indexOf('quote') === 0) {
 		getQuote(message.body, function(err, response){
 			console.log(response);
 			message.reply(response);
-		});		
-	}
-	else if(message.toLowerCase().indexOf('search') === 0){
+		});
+	} else if(message.toLowerCase().indexOf('search') === 0) {
 		getCompany(message.body, function(err, response){
 			console.log(response);
 			message.reply(response);
 		});
-	}
-	else{
-
+	} else {
+		promptMe(message.body, function(err, response){
+			console.log(response);
+			message.reply(response);
+		});
 	}
 });
 
