@@ -48,7 +48,13 @@ function getCompany(message, callback){
 
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
-		callback(null, json);
+		var arrayOfStrings = json.map(function(item){
+			return item.Name + ' (' + item.Symbol + ')';
+		});
+
+
+
+		callback(null, arrayOfStrings);
 	});
 }
 
@@ -59,12 +65,11 @@ bot.onTextMessage((message) => {
 
 	}
 	else{
-		// getCompany(message, function(err, response){
-		// 	console.log(response);
-		// 	message.reply(message.addResponseKeyboard(response));
-		// });
+		getCompany(message.body, function(err, response){
+			console.log(response);
+			message.addResponseKeyboard(response);
+		});
 
-		message.reply('testing');
 	}
 })
 
