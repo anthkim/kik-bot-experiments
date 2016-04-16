@@ -4,6 +4,7 @@ let express = require('express');
 let util = require('util');
 let http = require('http');
 let Bot  = require('@kikinteractive/kik');
+let request = require('request');
 let getenv = require('getenv');
 
 var app = express();
@@ -15,35 +16,49 @@ let bot = new Bot({
     baseUrl: 'kik-echobot.ngrok.io'
 });
 
-// let bot = new Bot({
-// 	username: getenv('KIK_USERNAME'),
-// 	apiKey: getenv('KIK_APIKEY'),
-// 	baseUrl: 'kik-echobot.ngrok.io'
-// });
-
 function processMessage(message, callback){
-	if (message.toLowerCase() == 'who am i') { 
-		callback(null, 'You are you');
-	}
+	// console.log(message);
+
+	if(message.indexOf('symbol$') == 0){
+		var ticker = message.slice('symbol$ '.length);
+		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
+		request(url, function(error, response, body){
+			var info = JSON.parse(body);
+			callback(null, info);
+		});
+
+	} 
 	else {
-		callback(null, 'Hello! You sent me the message: "' + message + '"');
+		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
+
+		request(url, function(error, response, body){
+			var info = JSON.parse(body);
+			callback(null, info);
+		});
 	}
 }
 
 
 
 bot.onTextMessage((message) => {
-    console.log('hello got a message', message);
+    // console.log('hello got a message', message);
     // message.reply('Hello! You sent me the message: "' + message.body + '"');
-    processMessage(message.body, function(err, response) {
+    processMessage(message.body, function(err, response){
     	message.reply(response);
     });
 
 });
 
+
 app.get('/', function(req, res){
-	res.send('Hello');
+	processMessage(req.query.message, function(error, response){
+		console.log(response);
+	});
 });
+
+// app.get('/', function(req, res){
+// 	res.send('Hello');
+// });
 
 app.use(bot.incoming());
 
