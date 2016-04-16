@@ -16,44 +16,70 @@ let bot = new Bot({
     baseUrl: 'kik-echobot.ngrok.io'
 });
 
-function processMessage(message, callback){
-	// console.log(message);
+// function processMessage(message, callback){
+// 	// console.log(message);
 
-	if(message.indexOf('symbol$') == 0){
-		var ticker = message.slice('symbol$ '.length);
-		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
-		request(url, function(error, response, body){
-			var info = JSON.parse(body);
-			callback(null, info);
-		});
+// 	if(message.indexOf('symbol$') == 0){
+// 		var ticker = message.slice('symbol$ '.length);
+// 		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
+// 		request(url, function(error, response, body){
+// 			var info = JSON.parse(body);
+// 			// callback(null, info);
+// 		});
 
-	} 
-	else {
-		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
+// 	} 
+// 	else {
+// 		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
 
-		request(url, function(error, response, body){
-			var info = JSON.parse(body);
-			callback(null, body);
-		});
-	}
+// 		request(url, function(error, response, body){
+// 			var info = JSON.parse(body);
+// 			// callback(null, body);
+// 			// response.
+// 			console.log(response);
+// 		});
+// 	}
+// }
+
+
+
+function getCompany(message, callback){
+	// callback(null, 'this worked');
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
+
+	request(url, function(error, response, body){
+		var json = JSON.parse(body);
+		callback(null, json);
+	});
 }
 
 
 
 bot.onTextMessage((message) => {
-    // console.log('hello got a message', message);
-    // message.reply('Hello! You sent me the message: "' + message.body + '"');
-    processMessage(message.body, function(err, response){
-    	message.reply(response);
-    });
+	if(message.indexOf('$$$') == 0){
 
-});
+	}
+	else{
+		getCompany(message, function(err, response){
+			console.log(response);
+			message.addResponseKeyboard(response);
+		});
+	}
+})
 
 
 app.get('/', function(req, res){
-	processMessage(req.query.message, function(error, response){
-		console.log(response);
-	});
+
+	if(req.query.message.indexOf('$$$') == 0){
+		console.log('quote something');
+	} 
+	else{
+		// console.log('lookup something');
+		getCompany(req.query.message, function(err, response){
+			console.log(response);
+			res.send(response);
+		});
+	}
+
 });
 
 // app.get('/', function(req, res){
