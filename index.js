@@ -16,74 +16,71 @@ let bot = new Bot({
     baseUrl: 'kik-echobot.ngrok.io'
 });
 
-// function processMessage(message, callback){
-// 	// console.log(message);
 
-// 	if(message.indexOf('symbol$') == 0){
-// 		var ticker = message.slice('symbol$ '.length);
-// 		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
-// 		request(url, function(error, response, body){
-// 			var info = JSON.parse(body);
-// 			// callback(null, info);
-// 		});
-
-// 	} 
-// 	else {
-// 		var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
-
-// 		request(url, function(error, response, body){
-// 			var info = JSON.parse(body);
-// 			// callback(null, body);
-// 			// response.
-// 			console.log(response);
-// 		});
-// 	}
-// }
 
 
 
 function getCompany(message, callback){
-	// callback(null, 'this worked');
-	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
+	var company = message.slice('search '.length);
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + company;
 
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
 		var arrayOfStrings = json.map(function(item){
-			return item.Name + ' (' + item.Exchange + ':' + item.Symbol + ')';
+			// return item.Name + ' (' + item.Exchange + ':' + item.Symbol + ')';
+			return item.Name + ' (Ticker:' + item.Symbol + ')';
 		});
-
-
-
-		callback(null, arrayOfStrings);
+		var arrayOfStringToOneString = arrayOfStrings.join(', ');
+		callback(null, 'Did you mean one of these companies? ' + arrayOfStringToOneString);
+		// how do i add response keyboard????
 	});
 }
 
-
+function getQuote(message, callback){
+	var ticker = message.slice('quote '.length);
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
+	
+	request(url, function(error, response, body){
+		var json = JSON.parse(body);
+		// callback(null,json);
+		callback(null, json.Name + ' stock\'s last price on ' + json.Timestamp + ' was $' + json.LastPrice + ', ' + json.ChangePercent + '% change from the previous day and ' + json.ChangePercentYTD + '% since the start of the year.');
+		// callback(null, info);
+	});
+}
 
 bot.onTextMessage((message) => {
-	if(message.indexOf('$$$') == 0){
-
+	if(message.toLowerCase().indexOf('quote') === 0){
+		getQuote(message.body, function(err, response){
+			console.log(response);
+			message.reply(response);
+		});		
 	}
-	else{
+	else if(message.toLowerCase().indexOf('search') === 0){
 		getCompany(message.body, function(err, response){
 			console.log(response);
-			message.reply.addResponseKeyboard(response);
+			message.reply(response);
 		});
+	}
+	else{
 
 	}
-})
+});
 
 
 app.get('/', function(req, res){
-	if(req.query.message.indexOf('$$$') == 0){
-		console.log('quote something');
-	} 
-	else{
+	if(req.query.message.toLowerCase().indexOf('quote') === 0){
+		getQuote(req.query.message, function(err, response){
+			console.log(response);
+			res.send(response);
+		});	
+	} else if(req.query.message.toLowerCase().indexOf('search') === 0){
 		// console.log('lookup something');
 		getCompany(req.query.message, function(err, response){
 			console.log(response);
 			res.send(response);
 		});
+	} else{
+		res.send('cannot help');
 	}
 
 });
