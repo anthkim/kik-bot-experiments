@@ -17,8 +17,8 @@ let bot = new Bot({
 });
 
 function getCompany(message, callback){
-	var company = message.slice('search '.length);
-	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + company;
+	// var company = message.slice('search '.length);
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Lookup/json?input=' + message;
 
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
@@ -33,8 +33,8 @@ function getCompany(message, callback){
 }
 
 function getQuote(message, callback){
-	var ticker = message.slice('quote '.length);
-	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
+	// var ticker = message.slice('quote '.length);
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + message;
 	
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
@@ -51,13 +51,15 @@ function promptMe(message, callback){
 function processMessage(message, callback) {
 	console.log('processMessage ' + message);
 	if(message.toLowerCase().indexOf('quote') === 0) {
-		getQuote(message.body, function(err, response){
+		var ticker = message.slice('quote '.length);
+		getQuote(ticker, function(err, response){
 			console.log(response);
 			// message.reply(response);
 			callback(null, response);
 		});
 	} else if(message.toLowerCase().indexOf('search') === 0) {
-		getCompany(message.body, function(err, response){
+		var company = message.slice('search '.length);
+		getCompany(company, function(err, response){
 			console.log(response);
 			// message.reply(response
 			callback(null, response);
@@ -81,13 +83,15 @@ bot.onTextMessage((message) => {
 
 app.get('/', function(req, res){
 	if(req.query.message.toLowerCase().indexOf('quote') === 0){
-		getQuote(req.query.message, function(err, response){
+		var ticker = req.query.message.slice('quote '.length);
+		getQuote(ticker, function(err, response){
 			console.log(response);
 			res.send(response);
 		});	
 	} else if(req.query.message.toLowerCase().indexOf('search') === 0){
 		// console.log('lookup something');
-		getCompany(req.query.message, function(err, response){
+		var company = req.query.message.slice('search '.length);
+		getCompany(company, function(err, response){
 			console.log(response);
 			res.send(response);
 		});
