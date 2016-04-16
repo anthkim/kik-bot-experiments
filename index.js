@@ -49,7 +49,7 @@ function getCompany(message, callback){
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
 		var arrayOfStrings = json.map(function(item){
-			return item.Name + ' (' + item.Symbol + ')';
+			return item.Name + ' (' + item.Exchange + ':' + item.Symbol + ')';
 		});
 
 
