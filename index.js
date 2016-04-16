@@ -59,16 +59,17 @@ bot.onTextMessage((message) => {
 
 	}
 	else{
-		getCompany(message, function(err, response){
-			console.log(response);
-			message.reply.addResponseKeyboard(response);
-		});
+		// getCompany(message, function(err, response){
+		// 	console.log(response);
+		// 	message.reply(message.addResponseKeyboard(response));
+		// });
+
+		message.reply('testing');
 	}
 })
 
 
 app.get('/', function(req, res){
-
 	if(req.query.message.indexOf('$$$') == 0){
 		console.log('quote something');
 	} 
