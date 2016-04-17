@@ -4,6 +4,7 @@ let express = require('express');
 let util = require('util');
 let http = require('http');
 let Bot  = require('@kikinteractive/kik');
+let Message = Bot.Message;
 let request = require('request');
 let getenv = require('getenv');
 
@@ -81,15 +82,20 @@ function processMessage(message, callback) {
 }
 
 
-bot.onTextMessage((message) => {
-	processMessage(message.body, function(error, response){
-		message.addResponseKeyboard([
+bot.onTextMessage((incomingMessage) => {
+	processMessage(incomingMessage.body, function(error, response){
+		var outgoingMessage = new Bot.Message('text');
+		outgoingMessage.setBody(response);
+		outgoingMessage.addResponseKeyboard([
 			"show me stocks",
 			"show me companies"
-		]);
-		message.reply(response);
+		],
+		false);
+
+		incomingMessage.reply(outgoingMessage);
 	});
 });
+
 
 
 app.get('/', function(req, res){
