@@ -11,10 +11,17 @@ var app = express();
 
 // Configure the bot API endpoint, details for your bot
 let bot = new Bot({
-    username: 'example.bot',
-    apiKey: '8a11119c-dd54-4241-b2ce-81869881f42e',
+    username: getenv('KIK_USERNAME'),
+	apiKey: getenv('KIK_APIKEY'),
     baseUrl: 'kik-echobot.ngrok.io'
 });
+
+// let suggestions = {
+// 	'initialResponseSuggestions' : [
+// 		"show me stocks",
+// 		"show me companies"
+// 	]
+// }
 
 function getCompany(message, callback){
 	// var company = message.slice('search '.length);
@@ -76,6 +83,10 @@ function processMessage(message, callback) {
 
 bot.onTextMessage((message) => {
 	processMessage(message.body, function(error, response){
+		message.addResponseKeyboard([
+			"show me stocks",
+			"show me companies"
+		]);
 		message.reply(response);
 	});
 });
