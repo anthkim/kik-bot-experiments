@@ -32,7 +32,7 @@ function getCompany(message, callback){
 		var json = JSON.parse(body);
 		var arrayOfStrings = json.map(function(item){
 			// return item.Name + ' (' + item.Exchange + ':' + item.Symbol + ')';
-			return item.Name + ' (Ticker:' + item.Symbol + ')';
+			return '.' + item.Name + ' (Ticker:' + item.Symbol + ')';
 		});
 		// var arrayOfStringToOneString = arrayOfStrings.join(', ');
 		// callback(null, 'Did you mean one of these companies? ' + arrayOfStringToOneString);
