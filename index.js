@@ -42,12 +42,8 @@ function getCompany(message, callback){
 }
 
 function getQuote(message, callback){
-	var start = message.indexOf(':');
-	var end = message.indexOf(')');
-	var ticker = str.substr(start, end);
 
-	// var ticker = message.slice('quote '.length);
-	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + message;
 	
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
@@ -104,28 +100,34 @@ function processMessage(message, callback) {
 // 	});
 // });
 
-bot.onTextMessage((incomingMessage, next) => {
+function processTextMessage(message, callback) {
+	if(message.toLowerCase().indexOf('.') === 0) {
 
-	getCompany(incomingMessage.body, function(error, response) {
-		var outgoingMessage = new Bot.Message('text');
+		var start = message.indexOf(':');
+		var end = message.indexOf(')');
+		var ticker = message.substr(start, end);
 
-		outgoingMessage.setBody(response);
+		getQuote(ticker, function(err, response) {
+			var outgoingMessage = new Bot.Message('text');
+			outgoingMessage.setBody(response);
+			outgoingMessage.addResponseKeyboard(response);
+			callback(null, outgoingMessage);
+		});
 
-		outgoingMessage.addResponseKeyboard(response, false);
+	} else {
 
-		incomingMessage.reply(outgoingMessage);
+		getCompany(message, function(err, response) {
+			callback(null, response);
+		});
+
+	}
+}
+
+bot.onTextMessage((incomingMessage) => {
+	processTextMessage(incomingMessage.body, function(error, response){
+		incomingMessage.reply(response);
 	});
-
-	next();
 });
-
-bot.onTextMessage((incomingKeyboardMessage) => {
-	getQuote(incomingKeyboardMessage.body, function(error, response) {
-		incomingKeyboardMessage.reply(response);
-	});
-});
-
-
 
 app.get('/', function(req, res){
 	processMessage(req.query.message, function(error, response){
