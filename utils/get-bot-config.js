@@ -7,10 +7,8 @@ var options = {
     uri : 'https://api.kik.com/v1/config',
     method : 'GET',
     auth: {
-        'user': 'example.bot',
-        'pass': '8a11119c-dd54-4241-b2ce-81869881f42e',
-        // 'user': getenv('KIK_USERNAME'),
-        // 'pass': getenv('KIK_APIKEY'),
+        'user': getenv('KIK_USERNAME'),
+        'pass': getenv('KIK_APIKEY'),
         'sendImmediately': false
     }
 }
