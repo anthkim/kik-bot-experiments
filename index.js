@@ -42,8 +42,12 @@ function getCompany(message, callback){
 }
 
 function getQuote(message, callback){
+	var start = message.indexOf(':');
+	var end = message.indexOf(')');
+	var ticker = str.substr(start, end);
+
 	// var ticker = message.slice('quote '.length);
-	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + message;
+	var url = 'http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=' + ticker;
 	
 	request(url, function(error, response, body){
 		var json = JSON.parse(body);
@@ -58,7 +62,7 @@ function promptMe(message, callback){
 }
 
 function processMessage(message, callback) {
-	console.log('processMessage ' + message);
+	// console.log('processMessage ' + message);
 	if(message.toLowerCase().indexOf('quote') === 0) {
 		var ticker = message.slice('quote '.length);
 		getQuote(ticker, function(err, response){
@@ -101,6 +105,7 @@ function processMessage(message, callback) {
 // });
 
 bot.onTextMessage((incomingMessage, next) => {
+
 	getCompany(incomingMessage.body, function(error, response) {
 		var outgoingMessage = new Bot.Message('text');
 
@@ -110,7 +115,16 @@ bot.onTextMessage((incomingMessage, next) => {
 
 		incomingMessage.reply(outgoingMessage);
 	});
+
+	next();
 });
+
+bot.onTextMessage((incomingKeyboardMessage) => {
+	getQuote(incomingKeyboardMessage.body, function(error, response) {
+		incomingKeyboardMessage.reply(response);
+	});
+});
+
 
 
 app.get('/', function(req, res){
