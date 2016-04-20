@@ -34,9 +34,10 @@ function getCompany(message, callback){
 			// return item.Name + ' (' + item.Exchange + ':' + item.Symbol + ')';
 			return item.Name + ' (Ticker:' + item.Symbol + ')';
 		});
-		var arrayOfStringToOneString = arrayOfStrings.join(', ');
-		callback(null, 'Did you mean one of these companies? ' + arrayOfStringToOneString);
-		// how do i add response keyboard????
+		// var arrayOfStringToOneString = arrayOfStrings.join(', ');
+		// callback(null, 'Did you mean one of these companies? ' + arrayOfStringToOneString);
+
+		callback(null, arrayOfStrings);
 	});
 }
 
@@ -82,43 +83,40 @@ function processMessage(message, callback) {
 }
 
 
-bot.onTextMessage((incomingMessage) => {
-	processMessage(incomingMessage.body, function(error, response){
+// bot.onTextMessage((incomingMessage) => {
+// 	processMessage(incomingMessage.body, function(error, response){
+		
+// 		var outgoingMessage = new Bot.Message('text');
+		
+// 		outgoingMessage.setBody(response);
+		
+// 		outgoingMessage.addResponseKeyboard([
+// 			"show me stocks",
+// 			"show me companies"
+// 		],
+// 		false);
+
+// 		incomingMessage.reply(outgoingMessage);
+// 	});
+// });
+
+bot.onTextMessage((incomingMessage, next) => {
+	getCompany(incomingMessage.body, function(error, response) {
 		var outgoingMessage = new Bot.Message('text');
+
 		outgoingMessage.setBody(response);
-		outgoingMessage.addResponseKeyboard([
-			"show me stocks",
-			"show me companies"
-		],
-		false);
+
+		outgoingMessage.addResponseKeyboard(response), false);
 
 		incomingMessage.reply(outgoingMessage);
-	});
+	};
 });
 
 
-
 app.get('/', function(req, res){
-	if(req.query.message.toLowerCase().indexOf('quote') === 0){
-		var ticker = req.query.message.slice('quote '.length);
-		getQuote(ticker, function(err, response){
-			console.log(response);
-			res.send(response);
-		});	
-	} else if(req.query.message.toLowerCase().indexOf('search') === 0){
-		// console.log('lookup something');
-		var company = req.query.message.slice('search '.length);
-		getCompany(company, function(err, response){
-			console.log(response);
-			res.send(response);
-		});
-	} else{
-		res.send('cannot help');
-	}
-	// processMessage(req.query.message, function(error, response){
-	// 	res.send(response);
-	// })
-
+	processMessage(req.query.message, function(error, response){
+		res.send(response);
+	})
 });
 
 // app.get('/', function(req, res){
