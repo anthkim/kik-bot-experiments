@@ -101,6 +101,9 @@ function processMessage(message, callback) {
 // });
 
 
+var keyboardOn = false;
+
+
 function processTextMessage(message, callback) {
 	if(message.toLowerCase().indexOf('.') === 0) {
 
@@ -123,7 +126,6 @@ function processTextMessage(message, callback) {
 }
 
 bot.onTextMessage((incomingMessage) => {
-	var keyboardOn = false;
 	processTextMessage(incomingMessage.body, function(error, response){
 		if(!keyboardOn) {
 			incomingMessage.reply(response);
