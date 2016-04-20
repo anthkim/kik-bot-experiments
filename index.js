@@ -110,7 +110,7 @@ function processTextMessage(message, callback) {
 		var ticker = message.substr(start, message.length - 1);
 
 		getQuote(ticker, function(err, response) {
-			callback(null, outgoingMessage);
+			callback(null, response);
 		});
 
 	} else {
@@ -131,14 +131,18 @@ bot.onTextMessage((incomingMessage) => {
 			var outgoingMessage = new Bot.Message('text');
 			outgoingMessage.setBody(response);
 			outgoingMessage.addResponseKeyboard(response);
-			incomingMessage.reply(outgoingMessage);			
+			// incomingMessage.reply(outgoingMessage);			
 		}
 	});
 });
 
 app.get('/', function(req, res){
-	processMessage(req.query.message, function(error, response){
-		res.send(response);
+	processTextMessage(req.query.message, function(error, response){
+		if(!keyboardOn) {
+			res.send(response);
+		} else {
+			res.send(response);
+		}
 	})
 });
 
