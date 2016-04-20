@@ -100,23 +100,23 @@ function processMessage(message, callback) {
 // 	});
 // });
 
+var keyboardOn = false;
+
 function processTextMessage(message, callback) {
 	if(message.toLowerCase().indexOf('.') === 0) {
 
 		var start = message.indexOf(':');
 		var end = message.indexOf(')');
-		var ticker = message.substr(start, end);
+		var ticker = message.substr(start, message.length - 1);
 
 		getQuote(ticker, function(err, response) {
-			var outgoingMessage = new Bot.Message('text');
-			outgoingMessage.setBody(response);
-			outgoingMessage.addResponseKeyboard(response);
 			callback(null, outgoingMessage);
 		});
 
 	} else {
 
 		getCompany(message, function(err, response) {
+			keyboardOn = true;
 			callback(null, response);
 		});
 
@@ -125,7 +125,14 @@ function processTextMessage(message, callback) {
 
 bot.onTextMessage((incomingMessage) => {
 	processTextMessage(incomingMessage.body, function(error, response){
-		incomingMessage.reply(response);
+		if(!keyboardOn) {
+			incomingMessage.reply(response);
+		} else {
+			var outgoingMessage = new Bot.Message('text');
+			outgoingMessage.setBody(response);
+			outgoingMessage.addResponseKeyboard(response);
+			incomingMessage.reply(outgoingMessage);			
+		}
 	});
 });
 
