@@ -106,10 +106,10 @@ bot.onTextMessage((incomingMessage, next) => {
 
 		outgoingMessage.setBody(response);
 
-		outgoingMessage.addResponseKeyboard(response), false);
+		outgoingMessage.addResponseKeyboard(response, false);
 
 		incomingMessage.reply(outgoingMessage);
-	};
+	});
 });
 
 
